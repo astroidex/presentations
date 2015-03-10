@@ -1,6 +1,10 @@
 -- SQL Beispiele zum Workshop PostGIS für Einsteiger
 -- http://www.fossgis.de/konferenz/2015/programm/events/794.de.html
 
+--Daten für den Workshop
+-- OSM
+-- http://download.geofabrik.de/europe/germany/nordrhein-westfalen/muenster-regbez-latest.shp.zip
+
 -- Kommentare erfolgen über --
 
 ------------------------------------------------------------------
