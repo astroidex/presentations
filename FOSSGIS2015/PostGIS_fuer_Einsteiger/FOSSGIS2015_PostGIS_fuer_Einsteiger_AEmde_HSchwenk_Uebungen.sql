@@ -2,8 +2,13 @@
 -- http://www.fossgis.de/konferenz/2015/programm/events/794.de.html
 
 --Daten für den Workshop
+-- OSGEO-Live unter: /home/user/data/natural_earth2/
+
+
 -- OSM
 -- http://download.geofabrik.de/europe/germany/nordrhein-westfalen/muenster-regbez-latest.shp.zip
+
+
 
 -- Kommentare erfolgen über --
 
@@ -48,21 +53,69 @@ SELECT *, ST_AsText(geom) from poi;
 SELECT * from geometry_column;
 
 
+-- poi Ausgabe der Geometrie als WKT, EWKT, Lon und Lat
+SELECT geom, ST_AsText(geom), ST_AsEKWT(geom), ST_X(geom), ST_Y(geom) from poi;
+
+
+
 ------------------------------------------------------------------
--- Übung 2: 
+-- Übung 2: Natural Earth2
 ------------------------------------------------------------------
 --2.1 QGIS SQL-Fenster oder pgAdmin SQL-Editor verwenden
+
+-- QGIS Filter auf ne_10m_admin_1_states_provinces_shp
+admin = 'Germany'
+
+-- Import der Daten (nur admin='Germany') unter dem Namen laender
+-- ESPG 4326
+
+-- SQL Editor
+-- Nur NRW ausgeben
+SELECT * FROM laender WHERE admin = 'Germany' AND name = 'Nordrhein-Westfalen'
+
+-- Berechung der Fläche der Länder
+SELECT ST_Area(geom), * from laender;
+
+SELECT ST_Area(ST_transform(geom,25832)) as flaeche, * from laender;
+
+--- das größte Bundesland?
+SELECT ST_Area(ST_transform(geom,25832)) as flaeche, * from laender ORDER BY flaeche DESC LIMIT 1;
+
+-- In welchem Bundesland liegen die pois?
+SELECT poi.*, l.* from poi, laender l
+WHERE st_distance(poi.geom, l.geom) = 0; 
+
+
+-- ST_UNION - Vereinigen der Bundeslaender
+Create view brd as 
+Select 1, st_union(geom) as geom from laender;
+
+
+
+-- Import der Natural Earth2 river in die Tabelle fluesse (mit gid, Geometrieindex und Angeb der Projektion EPSG 4326)
+
+-- ST_Buffer - Puffern von Daten
+Create view fluesse_puffer as
+Select gid,name, 
+st_buffer(geom,0.0001)::geometry(polygon,4326) as geom_buffer 
+from fluesse WHERE name = 'Rhine';
+
+
+------------------------------------------------------------------
+-- Übung 3: 
+------------------------------------------------------------------
+--3.1 QGIS SQL-Fenster oder pgAdmin SQL-Editor verwenden
 
 CREATE OR REPLACE VIEW plz_flaechen as
 SELECT ST_Area(geom) from plz;
 
 
 
--- 2.2. PLZ
+-- 3.2. PLZ
 -- st_transform rechnet die Fläche nach ETRS89 Zone 32 um (EPSG 25832) 
 SELECT ST_Area(ST_Transform(geom,25832)),* from plz;
 
--- Welche ist die größte Fläche
+-- Welche ist die größte Fläche?
 SELECT max(ST_Area(ST_Transform(geom,25832))) as flaeche from plz;
 
 SELECT ST_Area(ST_Transform(geom,25832)) as flaeche, * from plz ORDER BY flaeche desc limit 1;
@@ -74,7 +127,7 @@ SELECT poi.*, plz.* from poi, plz
 WHERE st_distance(poi.geom, plz.geom) = 0; 
 
 
--- 2.3 POI
+-- 3.3 POI
 -- Entfernung der zwei Punkte der Tabelle poi
 SELECT * from poi schloss where gid = 1;
 
@@ -90,9 +143,6 @@ SELECT *, st_MakeLine(schloss.geom, see.geom) from poi schloss, poi see where sc
 Create VIEW linie_zwischen_poi as
 SELECT schloss.gid, st_MakeLine(schloss.geom, see.geom)::geometry(linestring,4326) from poi schloss, poi see where schloss.gid = 1 AND see.gid=2;
 
--- poi Ausgabe der Geometrie als WKT, EWKT, Lon und Lat
-SELECT geom, ST_AsText(geom), ST_AsEKWT(geom), ST_X(geom), ST_Y(geom) from poi;
-
 
 -- Nur die Seen mit Beschriftung übertragen: 321 Stück
 -- Filter in QGIS setzen: type = 'water' and name != ''
@@ -104,7 +154,7 @@ DROP VIEW water_envelope;
 CREATE VIEW water_envelope as
 SELECT st_envelope(geom)::geometry(polygon,4326) from water;
 
--- 2.4 roads
+-- 3.4 roads
 -- Länge der Straße Schlossplatz
 SELECT geom, ST_AsText(geom), ST_AsEWKT(geom), ST_X(geom), ST_Y(geom) from poi;
 
