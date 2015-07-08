@@ -13,9 +13,14 @@
 --
 -- Austria: http://download.geofabrik.de/europe/austria-latest.shp.zip
 
--- PLZ von Deutschland zum Donwload unter
+-- PLZ von Deutschland zum Download unter
 -- https://trac.osgeo.org/osgeo/wiki/Live_GIS_Workshop_Install
 
+-- PostGIS Dokumentation
+-- http://postgis.net/docs/manual-2.1/
+
+-- PostgreSQL Dokumentation:
+-- http://www.postgresql.org/docs/current/interactive/index.html
 
 -- Kommentare erfolgen über --
 
@@ -128,10 +133,10 @@ WHERE st_distance(poi.geom, l.geom) = 0;
 
 -- 2.5 ST_UNION - Vereinigen der Bundeslaender
 Create view brd as 
-Select 1, st_union(geom) as geom from laender where name = 'Germany';
+Select 1, st_union(geom) as geom from laender where admin = 'Germany';
 
 Create view austria as 
-Select 1, st_union(geom) as geom from laender where name = 'Austria';
+Select 1, st_union(geom) as geom from laender where admin = 'Austria';
 
 
 ------------------------------------------------------------------
@@ -158,10 +163,7 @@ from fluesse WHERE name IN ('Rhine','Donau');
 ------------------------------------------------------------------
 -- Übung 4: Entfernung zwischen Objekten
 ------------------------------------------------------------------
---2.1 QGIS SQL-Fenster oder pgAdmin SQL-Editor verwenden
-
-CREATE OR REPLACE VIEW plz_flaechen as
-SELECT ST_Area(geom) from plz;
+-- QGIS SQL-Fenster oder pgAdmin SQL-Editor verwenden
 
 -- 4.1 POI
 -- Entfernung der zwei Punkte in Münster der Tabelle poi
