@@ -50,11 +50,11 @@ ST_GeometryFromText('POINT(7.62517 51.95616)', 4326)
 SELECT *, ST_AsText(geom) from poi;
 
 -- Anzeige der Sicht geometry_column
-SELECT * from geometry_column;
+SELECT * from geometry_columns;
 
 
 -- poi Ausgabe der Geometrie als WKT, EWKT, Lon und Lat
-SELECT geom, ST_AsText(geom), ST_AsEKWT(geom), ST_X(geom), ST_Y(geom) from poi;
+SELECT geom, ST_AsText(geom), ST_AsEWKT(geom), ST_X(geom), ST_Y(geom) from poi;
 
 
 
