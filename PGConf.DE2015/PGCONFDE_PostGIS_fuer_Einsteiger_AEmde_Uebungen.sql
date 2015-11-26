@@ -150,11 +150,21 @@ WHERE ST_Distance(poi.geom, l.geom) = 0;
 Create view brd as 
 Select 1 as gid, ST_Union(geom) as geom from laender where admin = 'Germany';
 
+
 -- 4.6 ST_Buffer - Puffern von Daten
 Create view fluesse_puffer as
 Select gid, name, 
 ST_Multi(ST_Buffer(geom,0.0002))::geometry(multipolygon,4326) as geom_buffer 
 from fluesse WHERE name = 'Elbe';
+
+
+-- 4.7 ST_Intersection - Verschneiden von Objekten
+Create or Replace View fluesse_intersection as
+Select f.gid, f.name as fluss, l.name as bundesland, 
+ST_Multi(ST_Intersection(st_buffer(f.geom,0.002),l.geom))::geometry(multipolygon,4326) as geom,
+ST_Length(ST_Transform(ST_Multi(ST_Intersection(f.geom,l.geom))::geometry(multilinestring,4326),25832)) as laenge
+from fluesse f, laender l 
+WHERE f.name = 'Elbe' and l.name = 'Hamburg';
 
 
 ------------------------------------------------------------------
@@ -166,7 +176,7 @@ SELECT * from poi h where gid In (2,3);
 SELECT *, st_distance(h.geom, e.geom) from poi h, poi e where h.gid = 2 AND e.gid = 3;
 
 SELECT *, st_distance(st_transform(h.geom,25832), st_transform(e.geom,25832)) 
-from poi h, poi e where h.gid = 2 AND e.gid=3;
+from poi h, poi e where h.gid = 2 AND e.gid= 3;
 
 
 -- 5.2 ST_MakeLine zum Erzeugen von Linien aus zwei Punkten
@@ -176,7 +186,7 @@ SELECT h.gid, h.name || ' ' || e.name as name , st_MakeLine(h.geom, e.geom) from
 Select *, st_AsEwkt(st_makeline) from linie_poi;
 
 
--- 5.3 Type Cast - genaue Angabe des Geometrietyps und SRID (Stickwort - typmod)
+-- 5.3 Type Cast - genaue Angabe des Geometrietyps und SRID (Stichwort - typmod)
 Create VIEW linie_zwischen_poi as
 SELECT h.gid, h.name || ' ' || e.name as name , 
 ST_MakeLine(h.geom, e.geom)::geometry(linestring,4326) as geom 
@@ -212,6 +222,10 @@ Update laender SET geom = ST_MakeValid(geom) where  st_isvalid(geom) = false;
 --         zur Berechung auf dem Spheroid
 ------------------------------------------------------------------
 -- Import der Daten ne_10m_populated_places.shp in die Tabelle orte
+cd /home/user/data/natural_earth2/
+shp2pgsql -I -s 4326 -W Latin1 ne_10m_populated_places.shp orte | psql -U user workshop
+
+
 -- Berechnung der Entfernung zwischen Hamburg und New York 6.130 Kilometer
 
 -- 7.1 Filter auf Hamburg und New York
