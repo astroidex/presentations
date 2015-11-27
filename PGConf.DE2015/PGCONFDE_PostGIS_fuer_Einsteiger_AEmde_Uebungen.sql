@@ -175,15 +175,13 @@ WHERE f.name = 'Elbe' and l.name = 'Hamburg';
 SELECT * from poi h where gid In (2,3);
 SELECT *, st_distance(h.geom, e.geom) from poi h, poi e where h.gid = 2 AND e.gid = 3;
 
-SELECT *, st_distance(st_transform(h.geom,25832), st_transform(e.geom,25832)) 
+SELECT *, st_Distance(st_transform(h.geom,25832), st_transform(e.geom,25832)) 
 from poi h, poi e where h.gid = 2 AND e.gid= 3;
 
 
 -- 5.2 ST_MakeLine zum Erzeugen von Linien aus zwei Punkten
 Create view linie_poi as
 SELECT h.gid, h.name || ' ' || e.name as name , st_MakeLine(h.geom, e.geom) from poi h, poi e where h.gid = 2 AND e.gid = 3;
-
-Select *, st_AsEwkt(st_makeline) from linie_poi;
 
 
 -- 5.3 Type Cast - genaue Angabe des Geometrietyps und SRID (Stichwort - typmod)
