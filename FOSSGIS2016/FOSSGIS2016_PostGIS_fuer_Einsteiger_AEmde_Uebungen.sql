@@ -91,7 +91,7 @@ SELECT geom, ST_AsText(geom), ST_AsEWKT(geom), ST_X(geom), ST_Y(geom) from poi;
 -- Übung 2: Natural Earth2 Provinzen
 ------------------------------------------------------------------
 -- 2.1 QGIS SQL-Fenster oder pgAdmin SQL-Editor verwenden
--- Laden Sie die Daten NaturalEarth Daten von /user/data/mnatural_earth2/ne_10m_admin_1_states_provinces_shp.shp
+-- Laden Sie die Daten NaturalEarth Daten von /home/user/data/natural_earth2/ne_10m_admin_1_states_provinces_shp.shp
 -- 
 
 -- QGIS Filter auf ne_10m_admin_1_states_provinces_shp
@@ -145,7 +145,7 @@ Select 1, st_union(geom) as geom from laender where admin = 'Germany';
 -- Übung 3: Natural Earth2 Flüsse
 ------------------------------------------------------------------
 
--- 3.1 Import der Natural Earth2 /user/data/natural_earth2/ne_10m_rivers_lake_centerlines.shp in die Tabelle fluesse (mit gid, Geometrieindex und Angabe der Projektion EPSG 4326)
+-- 3.1 Import der Natural Earth2 /home/user/data/natural_earth2/ne_10m_rivers_lake_centerlines.shp in die Tabelle fluesse (mit gid, Geometrieindex und Angabe der Projektion EPSG 4326)
 -- nur Flüsse übertragen: Filter featurecla = 'River'
 
 -- 3.2 Anzahl der Objekte in der Tabelle fluesse
