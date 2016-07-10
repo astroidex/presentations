@@ -2,7 +2,7 @@
 -- FOSSGIS 2016 Astrid Emde
 
 -- Es werden die Daten der OSGeo-Live verwendet
--- /user/data/natural_erath2/
+-- /user/data/natural_earth2/
 
 -- Dokumente und Daten sind auf der OSGeo Workshopseite verlinkt
 -- https://trac.osgeo.org/osgeo/wiki/Live_GIS_Workshop_Install
@@ -135,10 +135,10 @@ WHERE st_distance(poi.geom, l.geom) = 0;
 
 -- 2.5 ST_UNION - Vereinigen der Bundeslaender
 Create view austria as 
-Select 1, st_union(geom) as geom from laender where admin = 'Austria';
+Select 1 as gid, st_multi(st_union(geom))::geometry(multipolygon,4326) as geom from laender where admin = 'Austria';
 
 Create view brd as 
-Select 1, st_union(geom) as geom from laender where admin = 'Germany';
+Select 1 as gid, st_multi(st_union(geom))::geometry(multipolygon,4326) as geom from laender where admin = 'Germany';
 
 
 ------------------------------------------------------------------
@@ -157,7 +157,7 @@ SELECT ST_Length(ST_transform(geom,25832)) as laenge, * from fluesse;
 
 -- 3.4 ST_Buffer - Puffern von Daten
 Create view fluesse_puffer as
-Select gid,name, 
+Select gid, name, 
 st_buffer(geom,0.0001)::geometry(polygon,4326) as geom_buffer 
 from fluesse WHERE name IN ('Rhine','Donau');
 
