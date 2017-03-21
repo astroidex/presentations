@@ -1,0 +1,122 @@
+PostNAS Workshop
+------------------
+http://postnas.org
+
+* Was ist die PostNAS-Suite?
+* PostNAS-Suite – die Komponenten (ogr2ogr, norGIS ALKIS-Import, QGIS ALKIS Plugin)
+* Import von ALKIS-Daten mit Hilfe von norGIS ALKIS-Import
+* Überblick über die Tabellenstruktur der ALKIS Daten in der PostgreSQL-Datenbank
+* Visualisierungsmöglichkeiten (QGIS, MapServer WMS)
+* QGIS-ALKIS-Plugin zur Suche
+* Integration in Mapbender (ALKIS-Auskunft, Navigation)
+
+Download Unterlagen 
+https://github.com/astroidex/presentations/tree/master/FOSSGIS2017
+
+Demo
+http://demo.postnas.org/maordpbender3_nightly/application/alkis_demo
+
+
+http://trac.wheregroup.com/PostNAS/wiki/Komponenten
+
+norGIS ALKIS-Import
+http://www.norbit.de/68/
+
+
+1. RLP Testdaten herunterladen über
+-------------------------------------
+http://trac.wheregroup.com/PostNAS/wiki/ALKISTestdaten
+-> Download: http://trac.wheregroup.com/PostNAS/browser/trunk/demodaten/lverm_geo_rlp/gid-6.0/gm2566-testdaten-gid60-2008-11-11.xml.zip
+
+
+2. Daten in QGIS laden
+--------------------------------
+* Layer -> Layer hinzufügen -> Vektorlayer hinzufügen
+* xml-Datei auswählen
+* ax_flurstueck und ax_gebaeude aus der Layerliste auswählen
+
+
+3. alkis Datenbank anlegen
+---------------------------
+* pgAdmin starten user / user
+* neue Datenbank alkis
+* Erweiterung laden: postgis
+
+
+4. norGIS ALKIS-Import
+------------------------
+https://github.com/norBIT/alkisimport
+
+a) Herunterladen über
+https://github.com/norBIT/alkisimport/archive/master.zip
+
+b) entpacken
+
+c) alkisImport starten
+./alkisImport.py
+
+d) 
+Datenbank alkis angeben
+XML-Datei in Dateiliste laden
+Import starten
+
+
+QGIS Plugin norGIS ALKIS  
+--------------------------
+* Plugin aktivieren über: Erweiterungen -> Erweiterungen... -> Suche norGIS ALKIS-Einbindung -> Installieren
+* Datenbank alkis angeben sowie Modellart: Menü DB -> ALKIS -> Konfiguration
+* Layer einbinden
+
+
+QGIS PostNAS Suche
+------------------------
+* Plugin aktivieren über: Erweiterungen -> Erweiterungen... -> PostNAS Suche
+* Einstellungen: 
+** Datenbank alkis angeben
+** Volltextindex erstellen
+* Suche anzeigen über Lupe
+
+
+ALKIS WMS
+------------------
+* QGIS Server
+* MapServer Mapfile exportieren aus norgis ALKIS
+* Mapfile von http://trac.wheregroup.com/PostNAS/browser/trunk/umn/alkis_n
+
+
+Auskunftskripte / Suchen mit Mapbender3
+-----------------------------------------
+http://demo.postnas.org/mapbender3_nightly/application/alkis_demo
+http://trac.wheregroup.com/PostNAS/wiki/PostNASMapbender3
+
+
+
+
+
+
+
+------------------
+QGIS
+
+ALKIS ANZEIGE 
+
+
+
+QGIS Suche
+
+
+
+---------------
+mapfile erteugen
+
+qgis sever
+
+Bestehende Mpadtei verwenden
+
+
+-------------
+Mapbender 3
+
+http://demo.postnas.org/mapbender3_nightly/application/alkis_demo
+
+
