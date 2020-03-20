@@ -2,7 +2,6 @@
 
 https://www.fossgis-konferenz.de/2020/
 
-![](img/fossgis20-logo.png ) ![](img/postgresql_postgis.png)
 
 Videoaufzeichnungen
 
@@ -18,8 +17,3 @@ Workshop https://github.com/astroidex/fossgis-2020-workshop-postgresql-postgis-f
 * WhereGroup GmbH
 * astrid.emde@wheregroup.com
 * [@astroidex](https://twitter.com/astroidex)
-
-![](img/WhereGroup.png )
-
-
-
