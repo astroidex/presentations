@@ -1,0 +1,383 @@
+https://doc.mapbender.org/en/index.html
+
+https://github.com/mapbender/mapbender-workshop
+
+A. SearchRouter
+----------------------
+
+1. Add to parameters.yml
+
+    database2_driver:   pdo_pgsql
+    database2_host:     localhost
+    database2_port:     5432
+    database2_name:     natural_earth2
+    database2_path:     ~
+    database2_user:     user
+    database2_password: user  
+    
+
+2. Add to config.yml
+    
+            foss4g:
+                driver:   '%database2_driver%'
+                host:     '%database2_host%'
+                port:     '%database2_port%'
+                dbname:   '%database2_name%'
+                path:     '%database2_path%'
+                user:     '%database2_user%'
+                password: '%database2_password%'
+                persistent: true
+                charset:  UTF8
+                logging: '%kernel.debug%'
+                profiling: '%kernel.debug%'       
+
+3. Create view province in the database
+
+Create view provinces AS
+SELECT gid, name, admin, geom
+FROM public.ne_10m_admin_1_states_provinces_shp
+order by name, admin;
+
+
+4. Add element SearchRouter
+
+class: Mapbender\CoreBundle\Component\SQLSearchEngine
+class_options:
+  connection: foss4g
+  relation: provinces
+  attributes:
+    - gid
+    - name
+    - admin
+  geometry_attribute: geom
+form:
+  name:
+    type: Symfony\Component\Form\Extension\Core\Type\TextType
+    options:
+      required: false
+    compare: ilike
+  admin:
+    type: Symfony\Component\Form\Extension\Core\Type\TextType
+    options:
+      required: false
+      label: Country
+    compare: ilike
+results:
+  view: table
+  count: true
+  headers:
+    gid: ID
+    name: Name
+    admin: Country
+  callback:
+    event: click
+    options:
+      buffer: 10
+      minScale: null
+      maxScale: null
+
+
+B. SimpleSearch 
+------------------------
+
+Query Url: https://osm-search.wheregroup.com/search.php?format=geojson&polygon_geojson=1&addressdetails=1
+
+Collection path: features
+Label attribute: ${properties.address.city} ${properties.address.road} - ${properties.address.house_number}
+
+Geom attribute: geometry
+Geom attribute: GeoJSON
+
+
+C. Digitizer
+------------------------
+create table public.poi (
+    gid serial PRIMARY KEY,
+    name varchar,
+    type varchar,
+    abstract varchar,
+    public boolean,
+    date_favorite date,
+    title varchar,
+    firstname varchar,
+    lastname varchar,
+    email varchar,
+    interests varchar,
+    user_name varchar,
+    group_name varchar,
+    modification_date date,
+    my_type varchar,
+    file_reference varchar,
+    x float,
+    y float,
+    city varchar,
+    geom geometry(point,4326)
+);
+
+create table public.lines (
+    gid serial PRIMARY KEY,
+    name varchar,
+    type varchar,
+    abstract varchar,
+    public boolean,
+    date_favorite date,
+    title varchar,
+    firstname varchar,
+    lastname varchar,
+    email varchar,
+    interests varchar,
+    length float,
+    category varchar,
+    user_name varchar,
+    group_name varchar,
+    modification_date date,
+    my_type varchar,
+    file_reference varchar,
+    x float,
+    y float,
+    city varchar,
+    geom geometry(linestring,4326)
+);
+
+create table public.polygons (
+    gid serial PRIMARY KEY,
+    name varchar,
+    type varchar,
+    abstract varchar,
+    public boolean,
+    date_favorite date,
+    title varchar,
+    firstname varchar,
+    lastname varchar,
+    email varchar,
+    interests varchar,
+    area float,
+    category varchar,
+    user_name varchar,
+    group_name varchar,
+    modification_date date,
+    my_type varchar,
+    file_reference varchar,
+    x float,
+    y float,
+    city varchar,
+    geom geometry(polygon,4326)
+);
+
+
+poi:
+    label: point digitizing
+    inlineSearch: true
+    featureType:
+        connection: foss4g
+        table: poi
+        uniqueId: gid
+        geomType: point
+        geomField: geom
+        srid: 4326
+    openFormAfterEdit: true
+    zoomScaleDenominator: 500
+    allowEditData: true
+    allowDelete: true
+    allowDigitize: true
+    useContextMenu: true
+    toolset:
+        - type: drawPoint
+        - type: moveFeature
+    popup:
+        title: point test suite
+        width: 500px
+    searchType: currentExtent
+    tableFields:
+        gid: {label: Nr. , width: 20%}
+        name: {label: Name , width: 80%}
+    styles:
+        default:
+            strokeWidth: 2
+            strokeColor: '#0e6a9e'
+            fillColor: '#1289CD'
+            fillOpacity: 1
+            fillWidth: 2
+            pointRadius: 10
+        select:
+            strokeWidth: 3
+            strokeColor: '#0e6a9e'
+            fillOpacity: 0.7
+            pointRadius: 10
+    formItems:
+       - type: tabs
+         children:
+           - type: form
+             title: Basic information
+             css: {padding: 10px}
+             children:
+                 - type: label
+                   title: Welcome to the digitize demo. Try the new Mapbender feature!
+                 - type: input
+                   title: Name
+                   mandatory: true
+                   name: name
+                   mandatoryText: Please give a name to the poi.
+                   infoText: "Help: Please give a name to the new object."
+                 - type: input
+                   title: Title
+                   mandatory: false
+                   name: title
+                   mandatoryText: Please give a title to the poi.
+                 - type: textArea
+                   name: abstract
+                   title: Abstract
+                   placeholder: 'please edit this field'
+                 - type: select
+                   title: Type
+                   name: type
+                   options: {A: A, B: B, C: C, D: D, E: E}
+                 - type: breakLine
+           - type: form
+             title: Personal information
+             css: {padding: 10px}
+             children:
+                 - type: label
+                   title: Please give us some information about yourself.
+                 - type: fieldSet
+                   children:
+                       - type: input
+                         title: Firstname
+                         name: firstname
+                         css: {width: 30%}
+                       - type: input
+                         title: Lastname
+                         name: lastname
+                         css: {width: 30%}
+                       - type: input
+                         title: E-Mail
+                         name: email
+                         css: {width: 40%}
+                 - type: select
+                   multiple: false
+                   title: Interests
+                   name: interests
+                   options: {maps: maps, reading: reading, swimming: swimming, dancing: dancing, beer: beer, flowers: flowers}
+                 - type: date
+                   title: favorite Date
+                   name: date_favorite
+                   mandatory: true
+                   css: {width: 25%}
+                 - type: breakLine
+                 - type: breakLine
+                 - type: checkbox
+                   name: public
+                   value: true
+                   title: public (this new object is public)
+line:
+    label: line digitizing
+    inlineSearch: true
+    featureType:
+        connection: foss4g
+        table: lines
+        uniqueId: gid
+        geomType: line
+        geomField: geom
+        srid: 4326
+    openFormAfterEdit: true
+    allowDelete: true
+    useContextMenu: true
+    toolset:
+        - type: drawLine
+        - type: modifyFeature
+        - type: moveFeature
+    popup:
+        title: line test suite
+        width: 500px
+    searchType: currentExtent
+    tableFields:
+        gid: {label: Nr. , width: 20%}
+        name: {label: Name , width: 80%}
+    styles:
+        default:
+            strokeWidth: 2
+            strokeColor: '#0e6a9e'
+            fillColor: '#1289CD'
+            fillOpacity: 1
+            fillWidth: 2
+            pointRadius: 10
+        select:
+            strokeWidth: 3
+            strokeColor: '#0e6a9e'
+            fillOpacity: 0.7
+            pointRadius: 10
+    formItems:
+       - type: form
+         title: Basic information
+         css: {padding: 10px}
+         children:
+             - type: label
+               title: Welcome to the digitize demo. Try the new Mapbender feature!
+             - type: input
+               title: Name
+               name: name
+               mandatory: true
+               mandatoryText: Please give a name to the new object.
+               infoText: "Help: Please give a name to the new object."
+             - type: select
+               title: Type
+               name: type
+               options: {A: A, B: B, C: C, D: D, E: E}
+polygon:
+    label: polygon digitizing
+    inlineSearch: true
+    featureType:
+        connection: foss4g
+        table: polygons
+        uniqueId: gid
+        geomType: polygon
+        geomField: geom
+        srid: 4326
+    openFormAfterEdit: true
+    allowDelete: false
+    useContextMenu: true
+    toolset:
+        - type: drawPolygon
+        - type: drawRectangle
+        - type: drawDonut
+        - type: drawEllipse
+        - type: drawCircle
+        - type: modifyFeature
+        - type: moveFeature
+    popup:
+        title: polygon test suite
+        width: 500px
+    searchType: currentExtent
+    tableFields:
+        gid: {label: Nr. , width: 20%}
+        name: {label: Name , width: 80%}
+    styles:
+        default:
+            strokeWidth: 2
+            strokeColor: '#0e6a9e'
+            fillColor: '#1289CD'
+            fillOpacity: 1
+            fillWidth: 2
+            pointRadius: 10
+        select:
+            strokeWidth: 3
+            strokeColor: '#0e6a9e'
+            fillOpacity: 0.7
+            pointRadius: 10
+    formItems:
+       - type: form
+         title: Basic information
+         css: {padding: 10px}
+         children:
+             - type: label
+               title: Welcome to the digitize demo. Try the new Mapbender feature!
+             - type: input
+               title: Name
+               mandatory: true
+               name: name
+               mandatoryText: Please give a name to the new object.
+               infoText: "Help: Please give a name to the new object."
+             - type: select
+               title: Type
+               name: type
+               options: {A: A, B: B, C: C, D: D, E: E}                
