@@ -63,13 +63,13 @@ Im folgenden Abschnitt sollen die Fragen, die nach dem Vortrag gestellt wurden, 
 
 
 Frage: Wie aufwendig ist die Migration von Oracle nach PostGIS?
-Antwort: https://wiki.postgresql.org/wiki/Oracle_to_Postgres_Conversion
+- Antwort: https://wiki.postgresql.org/wiki/Oracle_to_Postgres_Conversion
 org2ogr kann beim Umzug nach PostgreSQl/PostGIS behilflich sein.
 https://gdal.org/programs/ogr2ogr.html
 https://gdal.org/drivers/vector/oci.html
 
 Frage: Gibt es eine Möglichkeit, Passwörter in der pgservice.conf verschlüsselt zu speichern?
-Antwort: die .pg_service.conf ist mit der lokalen .pgpass kombinierbar
+- Antwort: die .pg_service.conf ist mit der lokalen .pgpass kombinierbar
 https://www.postgresql.org/docs/12/libpq-pgpass.html
 
 Frage: Rasterdaten in der PostgreSQL/PostGIS-Datenbank - wie performant ist das im Vergleich zur Ablage in einem normalen Dateiverzeichnis?
@@ -79,15 +79,15 @@ Frage: Bietet die Speicherung von Rasterdaten in der PostGIS-DB Vorteile bezügl
 
 
 Frage: Ist über die DB-Manager in QGIS auch der Import von Shapefiles möglich?
-Antwort: ja
+- Antwort: ja
 
 
 Frage: Ist das ALKIS-Plugin nur für NRW-ALKIS oder auch für andere Landesvermessungen kompatibel?
-Antwort: Das ALKIS Plugin kann bundesweit für das Austauschformat NAS eingesezt werden.
+- Antwort: Das ALKIS Plugin kann bundesweit für das Austauschformat NAS eingesezt werden.
 
 
 Frage: Lohnt sich das Anlegen einer Postgis Datenbank auch bei kleineren Datenmengen und geringen personellen Ressourcen? Falls nicht, gibt es eine "einfachere" Art der Datenhaltung, um Redundanzen zu vermeiden?
-Antwort: Wollten Sie Wert auf Mehrbenutzerfähigkeit und zentrale Datenhaltung, sowie Berechtigungen legen, lohnt sich PostgreSQL auf alle Fälle.
+- Antwort: Wollten Sie Wert auf Mehrbenutzerfähigkeit und zentrale Datenhaltung, sowie Berechtigungen legen, lohnt sich PostgreSQL auf alle Fälle.
 
 
 Frage: Wie stellt man eine Hintergrundkarte im pgAdmin GeometryViewer ein?
