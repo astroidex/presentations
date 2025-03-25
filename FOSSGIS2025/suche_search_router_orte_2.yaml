@@ -1,0 +1,105 @@
+class: Mapbender\CoreBundle\Component\SQLSearchEngine
+class_options:
+  connection: geodata_db
+  relation: brd.qry_gn250_p_ortslage
+  attributes:
+    - gid
+    - name
+    - gemeinde
+    - hoehe_ger
+    - bundesland
+  geometry_attribute: geom
+form:
+  bundesland:
+    type: choice
+    options:
+      required: false
+      label: Bundesland
+      placeholder: 'Please select...'
+      choices:
+            Nordrhein-Westfalen: Nordrhein-Westfalen
+            Niedersachsen: Niedersachsen
+  gemeinde:
+    type: text
+    options:
+      label: Gemeinde
+      required: false
+      attr:
+        data-autocomplete: 'on'
+        data-autocomplete-using: name, bundesland
+    compare: exact
+  name:
+    type: text
+    options:
+      required: false
+      label: Name
+      attr:
+        data-autocomplete: 'on'
+        ata-autocomplete-using: gemeinde,bundesland
+    compare: ilike
+
+results:
+  view: table
+  count: true
+  exportcsv: true
+  sortBy: name
+  sortOrder: asc #desc
+  zoomToResultExtent: true
+  headers:
+    name: Name
+    gemeinde: Gemeinde
+    hoehe_ger: Höhe
+    bundesland: Bundesland
+  callback:
+    event: click
+    options:
+      buffer: 1000
+      minScale: null
+      maxScale: null
+  styleMap:
+    default:
+      strokeColor: '#8000FF'
+      strokeWidth: 1
+      strokeOpacity: 1
+      fillColor: '#8000FF'
+      fillOpacity: 0.8
+      fillWidth: 6
+      label: ${name} # Attribut to use for labeling or fiexed text
+      fontColor: "#0000ff"    # font color
+      fontSize: 14px          # font size in piexels
+      fontFamily: 'Arial, Courier New, monospace'
+      labelOutlineColor: '#ffffff' # font outline
+      labelOutlineWidth: 1    # font outline width
+      fontOffsetX: -18       # Offset X-axis
+      fontOffsetY: -18       # Offset Y-axis
+    select:
+      strokeColor: '#ff00ff'
+      strokeWidth: 2
+      strokeOpacity: 1
+      fillColor: '#ff0000'
+      fillOpacity: 0.6
+      fillWidth: 12
+      label: ${name} # Attribut to use for labeling or fiexed text
+      fontColor: "#0000ff"    # font color
+      fontSize: 14px          # font size in piexels
+      fontFamily: 'Arial, Courier New, monospace'
+      labelOutlineColor: '#ffffff' # font outline
+      labelOutlineWidth: 1    # font outline width
+      fontOffsetX: -18       # Offset X-axis
+      fontOffsetY: -18       # Offset Y-axis
+    temporary:
+      strokeColor: '#00FFFF'
+      strokeOpacity: 1
+      strokeWidth: 2
+      fillColor: '#00FFFF'
+      fillWidth: 6
+      fillOpacity: 0.6
+      label: ${name} - ${gemende} # Attribut to use for labeling or fiexed text
+      fontColor: "#ff0000"    # font color
+      fontSize: 20px          # font size in piexels
+      fontFamily: 'Arial, Courier New, monospace'
+      fontWeight: bold        # font weight
+      labelOutlineColor: '#ffffff' # font outline
+      labelOutlineWidth: 1    # font outline width
+      fontOffsetX: -18       # Offset X-axis
+      fontOffsetY: -18       # Offset Y-axis
