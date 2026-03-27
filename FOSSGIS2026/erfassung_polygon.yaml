@@ -1,0 +1,93 @@
+polygon:
+  label: 'polygon digitizing'
+  maxResults: 1500
+  featureType:
+    connection: geodata_db
+    table: polygons
+    uniqueId: gid
+    geomType: polygon
+    geomField: geom
+    srid: 4326
+    styleField: style
+  allowDelete: true
+  allowCustomStyle: true
+  allowCancelButton: true
+  allowDeleteByCancelNewGeometry: false
+  allowCreate: true
+  allowEdit: true
+  allowDigitize: true
+  allowChangeVisibility: false
+  printable: true
+  toolset:
+    -
+      type: drawPolygon
+    -
+      type: drawRectangle
+    -
+      type: modifyFeature
+    -
+      type: moveFeature
+  popup:
+    title: 'polygon test suite'
+    width: 500px
+  searchType: currentExtent
+  tableFields:
+    gid:
+      label: Nr.
+      width: 20%
+    type:
+      label: Name
+      width: 20%
+    name:
+      label: Name
+      width: 60%
+  formItems:
+    -
+      type: label
+      title: 'Welcome to the digitize demo. Try the new Mapbender feature!'
+    -
+      type: input
+      title: Name
+      mandatory: true
+      name: name
+      mandatoryText: 'Please give a name to the new object.'
+      infoText: 'Help: Please give a name to the new object.'
+    -
+      type: select
+      title: Type
+      name: type
+      mandatoryText: 'Please give a type to the new object.'
+      infoText: 'Help: Please give a type to the new object.'
+      options:
+        A: A
+        B: B
+        C: C
+        D: D
+        E: E
+  styles:
+    default:
+      strokeWidth: 2
+      strokeColor: '#0000ff'
+      strokeOpacity: 0.6
+      label: '${name}'
+      fontColor: '#0000ff'
+      fontSize: 18
+      fontFamily: 'Arial, Courier New, monospace'
+      fontWeight: bold
+      labelOutlineColor: white
+      labelOutlineWidth: 1
+      labelYOffset: -18
+      labelXOffset: -18
+    select:
+      strokeWidth: 5
+      strokeOpacity: 0.5
+      strokeColor: '#b000b0'
+      label: '${gid}'
+      fontColor: blue
+      fontSize: 18
+    unsaved:
+      strokeWidth: 5
+      strokeColor: '#ff0000'
+      label: 'Neu - bitte speichern'
+      fontColor: red
+      fontSize: 18
